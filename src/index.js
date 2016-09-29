@@ -75,6 +75,13 @@ app.post('/', function (req, res) {
     });
     nosql.insert(newItem, insertCallback);
     console.log('post', req.body);
+    req.body.message = '';
+    setTimeout(function () {
+        res.render('home', {
+            title: 'Todo List',
+            todoList: displayAll()
+        });
+    }, 1000)
 });
 app.get('/', (request, response) => {
     response.render('home', {
