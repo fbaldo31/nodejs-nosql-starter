@@ -1,0 +1,8 @@
+.idea
+
+# Dependency directories
+node_modules
+
+# Databases
+src/nosql/*.nosql
+src/nosql/*.changelog

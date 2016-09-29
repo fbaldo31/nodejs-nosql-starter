@@ -1,0 +1,21 @@
+{
+  "name": "node-nosql",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "url": "https://github.com/fbaldo31/node-nosql"
+  },
+  "scripts": {
+    "start": "./src/node server.js"
+  },
+  "author": "Frederick BALDO",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "node-http": "0.0.5",
+    "nosql": "3.2.0"
+  }
+}
