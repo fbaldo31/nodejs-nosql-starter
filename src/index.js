@@ -26,32 +26,11 @@ var displayCallback = function(err, selected) {
     console.log('Got', selected);
     return selected;
 };
-/*
-var removeFilter = function(todoMessage) {
-    // Do stuff here before remove
-    var itemToRemove = {};
-    nosql.each(function (item, key) {
-        console.log(item, key);
-        if (item.body == todoMessage) {
-            itemToRemove = item;
-        }
-    });
-    console.log(itemToRemove);
-    return itemToRemove;
-};
-var removeCallback = function(err, selected) {
-    // Do stuff here before remove
-    console.log('remove', selected)
-};*/
 var mapAll = function(doc) {
     // Add sort, filter results ...
     return doc;
 };
-/*
-var countDatabase = nosql.count(function(doc) {
-}, function(err, count) {
-    return count;
-});*/
+
 const todoList = nosql.all(mapAll, displayCallback);
 var all = function () {
     var items = [];
@@ -86,19 +65,15 @@ var displayAll = function() {
 // Routes handler
 var newItem = [];
 app.post('/', function (req, res) {
-    // if (req.body.delete) {
-    //     nosql.remove(removeFilter(req.body.delete), map, removeCallback);
-    // } else {
-        if (req.body.message === '') {
-            return;
-        } // Database insert
-        // retrieve user posted data from the body
-        newItem.push({
-            id: countAll(),
-            body: req.body.message
-        });
-        nosql.insert(newItem, insertCallback);
-   // }
+    if (req.body.message === '') {
+        return;
+    } // Database insert
+    // retrieve user posted data from the body
+    newItem.push({
+        id: countAll(),
+        body: req.body.message
+    });
+    nosql.insert(newItem, insertCallback);
     console.log('post', req.body);
 });
 app.get('/', (request, response) => {
