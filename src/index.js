@@ -17,13 +17,9 @@ app.use(bodyParser.urlencoded({
 // Database setup
 var nosql = require('nosql').load('nosql/database.nosql');
 
-var insertCallback = function(err, count) {
-    // Do stuff here before insert
-    console.log('Insert ', err, count);
-};
-var displayCallback = function(err, selected) {
-    // Do stuff here before display
-    console.log('Got', selected);
+var callback = function(err, selected) {
+    // console.log('Got', selected);
+    
     return selected;
 };
 var mapAll = function(doc) {
@@ -31,57 +27,43 @@ var mapAll = function(doc) {
     return doc;
 };
 
-const todoList = nosql.all(mapAll, displayCallback);
-var all = function () {
-    var items = [];
-    nosql.each(function success(value) {
-        items.push(value);
-    }), function error(err) {
-        console.error('Error', err);
-    };
-    return items;
-};
+const todoList = nosql.all(mapAll, callback);
 
-
-var map = function(doc) {
-    if (doc)
-        return doc;
-};
-
-var countAll = function() {
-    var i = 0;
-    displayAll().forEach(function (value, key) {
-        i++;
-    });
-    return i;
-};
 var displayAll = function() {
     var items = [];
     nosql.each(function (value, key) {
-        items.push(value);
+        if (value.body)
+            items.push(value);
     });
     return items;
 };
 // Routes handler
-var newItem = [];
 app.post('/', function (req, res) {
-    if (req.body.message === '') {
-        return;
-    } // Database insert
-    // retrieve user posted data from the body
-    newItem.push({
-        id: countAll(),
-        body: req.body.message
-    });
-    nosql.insert(newItem, insertCallback);
-    console.log('post', req.body);
-    newItem = [];
+    var newItem = [];
+    if (req.body.delete) {
+        
+        nosql.update(function(doc) {
+            if (doc.body === req.body.delete)
+                doc = {};
+                console.log('remove', doc);
+                return doc;
+        }, callback);
+    }
+    if (req.body.message !== undefined && req.body.message !== '') {
+        // retrieve user posted data from the body
+        newItem.push({
+            body: req.body.message
+        });
+        nosql.insert(newItem, callback);
+    }
+
     setTimeout(function () {
         res.render('home', {
             title: 'Todo List',
             todoList: displayAll()
         });
-    }, 1000)
+    }, 500);
+    console.log('post', req.body);
 });
 app.get('/', (request, response) => {
     response.render('home', {
