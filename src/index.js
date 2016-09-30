@@ -75,7 +75,7 @@ app.post('/', function (req, res) {
     });
     nosql.insert(newItem, insertCallback);
     console.log('post', req.body);
-    req.body.message = '';
+    newItem = [];
     setTimeout(function () {
         res.render('home', {
             title: 'Todo List',
