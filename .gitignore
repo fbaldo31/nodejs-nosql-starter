@@ -4,4 +4,8 @@
 node_modules
 
 # Databases
+src/nosql/*.nosql
 src/nosql/*.changelog
+
+# Others
+npm-debug.log

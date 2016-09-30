@@ -8,5 +8,8 @@
 `cd nodejs-nosql-starter`
 `npm install`
 
+###Prepare database
+Create `src/nosql/database.nosql`
+
 ###Launch
 `npm start`
