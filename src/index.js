@@ -26,9 +26,6 @@ var mapAll = function(doc) {
     // Add sort, filter results ...
     return doc;
 };
-
-const todoList = nosql.all(mapAll, callback);
-
 var displayAll = function() {
     var items = [];
     nosql.each(function (value, key) {
@@ -41,7 +38,7 @@ var displayAll = function() {
 app.post('/', function (req, res) {
     var newItem = [];
     if (req.body.delete) {
-        
+        // Remove item
         nosql.update(function(doc) {
             if (doc.body === req.body.delete)
                 doc = {};
@@ -49,14 +46,30 @@ app.post('/', function (req, res) {
                 return doc;
         }, callback);
     }
+    if (req.body.done) {  // Done action
+        nosql.update(function(doc) {
+            if (doc.body === req.body.done)
+                doc = {body: req.body.done, done:1};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.todo) { // Remove done flag
+        nosql.update(function(doc) {
+            if (doc.body === req.body.todo)
+                doc = {body: req.body.todo};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
     if (req.body.message !== undefined && req.body.message !== '') {
-        // retrieve user posted data from the body
+        // Insert new item
         newItem.push({
             body: req.body.message
         });
         nosql.insert(newItem, callback);
     }
-
+    // reload page
     setTimeout(function () {
         res.render('home', {
             title: 'Todo List',

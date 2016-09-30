@@ -19,9 +19,23 @@
         {{#each todoList }}
 
         <li class="row list-group-item">
-            <span class="pull-left"><span>{{ @index }}</span> - {{ body }}</span>
-            <form method="post" action="#" class="form-horizontal col-md-2 pull-right">
-                <button class="btn-danger btn-sm form-control" type="submit" name="delete" value="{{ body }}">
+            <span class="pull-left">
+                <span>{{ @index }}</span> -
+                {{#if done }}<small>{{else }}<b>{{/if}}
+                {{ body }}
+                {{#if done }} <i> - done</i></small> {{else }}</b>{{/if}}
+            </span>
+            <form method="post" action="#" class="form-horizontal pull-right">
+                {{#if done }}
+                <button class="btn btn-default btn-sm pull-left" type="submit" name="todo" value="{{ body }}">
+                    <i class="glyphicon glyphicon-ok"></i>
+                </button>
+                {{else }}
+                    <button class="btn btn-info btn-sm pull-left" type="submit" name="done" value="{{ body }}">
+                        <i class="glyphicon glyphicon-ok"></i>
+                    </button>
+                {{/if}}
+                <button class="btn btn-danger btn-sm pull-left" type="submit" name="delete" value="{{ body }}">
                     <i class="glyphicon glyphicon-remove"></i>
                 </button>
             </form>
