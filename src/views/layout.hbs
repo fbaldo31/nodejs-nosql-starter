@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <title>Todo List</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-</head>
+ </head>
 <body>
     {{{body}}}
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script>
+        // Animations
+        $(function () {
+            $('.btn-danger').on('click', function () {
+                $(this).parent().parent().fadeOut(600);
+            });
+            $('.btn-default').on('click', function () {
+                $(this).parent().parent().fadeOut(600);
+            });
+            $('.btn-info').on('click', function () {
+                $(this).parent().parent().fadeOut(600);
+            });
+        });
+    </script>
 </body>
 </html>

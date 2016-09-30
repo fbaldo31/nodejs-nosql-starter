@@ -22,10 +22,6 @@ var callback = function(err, selected) {
     
     return selected;
 };
-var mapAll = function(doc) {
-    // Add sort, filter results ...
-    return doc;
-};
 var displayAll = function() {
     var items = [];
     nosql.each(function (value, key) {
