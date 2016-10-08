@@ -1,30 +1,26 @@
 {{! Lists view }}
 {{#if list}}
-    <h2>Select a list</h2>
-    <ul class="list-group">
+    <div class="panel panel-default row">
+        <div class="panel-heading">
+            <h3 class="panel-title">Go to</h3>
+        </div>
         {{#each list }}
+            <ul class="nav nav-pills">
+                <li class="list-group-item col-xs-12">
+                        <form method="post" action="#" class="form-horizontal pull-right">
+                            <a href="/list/{{ @index }}" class="col-xs-8">{{ name }}</a>
+                            <button class="btn btn-sm btn-danger" type="submit" name="delete" value="{{ name }}" title="Delete this list">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </form>
 
-            <li class="row list-group-item">
-            <span class="pull-left">
-                <span>{{ @index }}</span> -
-                {{#if done }}<small>{{else }}<b>{{/if}}
-                {{ name }}
-                {{#if done }} <i> - done</i></small> {{else }}</b>{{/if}}
-            </span>
-                <form method="post" action="#" class="form-horizontal pull-right">
-                    {{#if done }}
-                        <button class="btn btn-default btn-sm pull-left" type="submit" name="todo" value="{{ name }}">
-                            <i class="glyphicon glyphicon-ok"></i>
-                        </button>
-                    {{/if}}
-                    <button class="btn btn-danger btn-sm pull-left" type="submit" name="delete" value="{{ name }}">
-                        <i class="glyphicon glyphicon-remove"></i>
-                    </button>
-                </form>
-            </li>
+                </li>
+            </ul>
+
 
         {{/each}}
-    </ul>
+    </div>
+
 {{/if}}
 </article>
 </div>

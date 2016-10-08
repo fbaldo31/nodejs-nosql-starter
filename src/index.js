@@ -32,6 +32,14 @@ var displayTodos = function() {
     });
     return items;
 };
+var displayTodosByList = function(listName) {
+    var items = [];
+    nosql.each(function (value, key) {
+        if (value.list == listName)
+            items.push(value);
+    });
+    return items;
+};
 var displayLists = function() {
     var items = [];
     list.each(function (value, key) {
@@ -40,6 +48,16 @@ var displayLists = function() {
     });
     return items;
 };
+var getListByIndex = function(index) {
+    var items = [];
+    list.each(function (value, key) {
+        if (value.name)
+            items.push(value.name);
+    });
+    console.log('list', items);
+    return items;
+};
+const lists = displayLists();
 // Routes handler
 var newItem = [];
 app.post('/', function (req, res) {
@@ -91,19 +109,52 @@ app.post('/', function (req, res) {
     }, 500);
     console.log('post', req.body);
 });
+app.post('/list/:id', function (req, res) {
+    // New todoListItem
+    if (req.body.message !== undefined && req.body.message !== '') {
+        // Insert new item
+        newItem.push({
+            list: req.body.listName,
+            body: req.body.message
+        });
+        nosql.insert(newItem, callback);
+    }
+    // New list
+    if (req.body.list !== undefined && req.body.list !== '') {
+        // Insert new list
+        newItem.push({
+            name: req.body.list
+        });
+        list.insert(newItem, callback);
+    }
+    // reload page
+    setTimeout(function () {
+        res.render('list/' + req.param('id'), {
+            title: 'Todo List',
+            subtitle: 'Start by creating a list',
+            list: displayLists(),
+            todo: displayTodosByList(lists[req.param('id')].name)
+        });
+    }, 500);
+    console.log('post', req.body);
+});
 app.get('/', (request, response) => {
     response.render('home', {
         title: 'Todo List',
+        subtitle: 'Start by creating a list',
         list: displayLists()
         // todo: displayTodos()
     });
 });
+var listName = '';
 app.get('/list/:id', (request, response) => {
     response.render('list', {
         title: 'Todo List',
+        listId: lists[request.param('id')].name,
         list: displayLists(),
-        todo: displayTodos(req.param('id'))
+        todo: displayTodosByList(lists[request.param('id')].name)
     });
+console.log('route: list ', request.param('id'));
 });
 // Views settings
 app.engine('.hbs', exphbs({
