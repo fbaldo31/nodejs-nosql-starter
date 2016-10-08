@@ -15,46 +15,27 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Database setup
-var nosql = require('nosql').load('nosql/database.nosql');
+var list = require('nosql').load('nosql/list.nosql');
+var nosql = require('nosql').load('nosql/todo.nosql');
 
 var callback = function(err, selected) {
     // console.log('Got', selected);
     
     return selected;
 };
-var mapAll = function(doc) {
-    // Add sort, filter results ...
-    return doc;
-};
 
-const todoList = nosql.all(mapAll, displayCallback);
-var all = function () {
-    var items = [];
-    nosql.each(function success(value) {
-        items.push(value);
-    }), function error(err) {
-        console.error('Error', err);
-    };
-    return items;
-};
-
-
-var map = function(doc) {
-    if (doc)
-        return doc;
-};
-
-var countAll = function() {
-    var i = 0;
-    displayAll().forEach(function (value, key) {
-        i++;
-    });
-    return i;
-};
-var displayAll = function() {
+var displayTodos = function() {
     var items = [];
     nosql.each(function (value, key) {
         if (value.body)
+            items.push(value);
+    });
+    return items;
+};
+var displayLists = function() {
+    var items = [];
+    list.each(function (value, key) {
+        if (value.name)
             items.push(value);
     });
     return items;
@@ -87,6 +68,13 @@ app.post('/', function (req, res) {
             return doc;
         }, callback);
     }
+    if (req.body.list !== undefined && req.body.list !== '') {
+        // Insert new list
+        newItem.push({
+            name: req.body.list
+        });
+        list.insert(newItem, callback);
+    }
     if (req.body.message !== undefined && req.body.message !== '') {
         // Insert new item
         newItem.push({
@@ -98,7 +86,7 @@ app.post('/', function (req, res) {
     setTimeout(function () {
         res.render('home', {
             title: 'Todo List',
-            todoList: displayAll()
+            todoList: displayTodos()
         });
     }, 500);
     console.log('post', req.body);
@@ -106,7 +94,15 @@ app.post('/', function (req, res) {
 app.get('/', (request, response) => {
     response.render('home', {
         title: 'Todo List',
-        todoList: displayAll()
+        list: displayLists()
+        // todo: displayTodos()
+    });
+});
+app.get('/list/:id', (request, response) => {
+    response.render('list', {
+        title: 'Todo List',
+        list: displayLists(),
+        todo: displayTodos(req.param('id'))
     });
 });
 // Views settings
