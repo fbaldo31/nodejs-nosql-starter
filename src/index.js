@@ -17,13 +17,9 @@ app.use(bodyParser.urlencoded({
 // Database setup
 var nosql = require('nosql').load('nosql/database.nosql');
 
-var insertCallback = function(err, count) {
-    // Do stuff here before insert
-    console.log('Insert ', err, count);
-};
-var displayCallback = function(err, selected) {
-    // Do stuff here before display
-    console.log('Got', selected);
+var callback = function(err, selected) {
+    // console.log('Got', selected);
+    
     return selected;
 };
 var mapAll = function(doc) {
@@ -58,29 +54,53 @@ var countAll = function() {
 var displayAll = function() {
     var items = [];
     nosql.each(function (value, key) {
-        items.push(value);
+        if (value.body)
+            items.push(value);
     });
     return items;
 };
 // Routes handler
 var newItem = [];
 app.post('/', function (req, res) {
-    if (req.body.message === '') {
-        return;
-    } // Database insert
-    // retrieve user posted data from the body
-    newItem.push({
-        id: countAll(),
-        body: req.body.message
-    });
-    nosql.insert(newItem, insertCallback);
-    req.body.message = '';
+    if (req.body.delete) {
+        // Remove item
+        nosql.update(function(doc) {
+            if (doc.body === req.body.delete)
+                doc = {};
+                console.log('remove', doc);
+                return doc;
+        }, callback);
+    }
+    if (req.body.done) {  // Done action
+        nosql.update(function(doc) {
+            if (doc.body === req.body.done)
+                doc = {body: req.body.done, done:1};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.todo) { // Remove done flag
+        nosql.update(function(doc) {
+            if (doc.body === req.body.todo)
+                doc = {body: req.body.todo};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.message !== undefined && req.body.message !== '') {
+        // Insert new item
+        newItem.push({
+            body: req.body.message
+        });
+        nosql.insert(newItem, callback);
+    }
+    // reload page
     setTimeout(function () {
         res.render('home', {
             title: 'Todo List',
             todoList: displayAll()
         });
-    }, 1000)
+    }, 500);
     console.log('post', req.body);
 });
 app.get('/', (request, response) => {
