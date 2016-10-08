@@ -100,6 +100,7 @@ app.post('/', function (req, res) {
         });
         nosql.insert(newItem, callback);
     }
+    
     // reload page
     setTimeout(function () {
         res.render('home', {
@@ -127,13 +128,39 @@ app.post('/list/:id', function (req, res) {
         });
         list.insert(newItem, callback);
     }
+    if (req.body.done) {  // Done action
+        nosql.update(function(doc) {
+            if (doc.body === req.body.done)
+                doc = {list: req.body.parentName, body: req.body.done, done:1};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.todo) { // Remove done flag
+        nosql.update(function(doc) {
+            if (doc.body === req.body.todo)
+                doc = {list: req.body.parentName, body: req.body.todo};
+            console.log('update', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.deleteItem) {
+        // Remove item
+        nosql.update(function(doc) {
+            if (doc.body === req.body.delete)
+                doc = {};
+            console.log('remove', doc);
+            return doc;
+        }, callback);
+    }
     // reload page
     setTimeout(function () {
-        res.render('list/' + req.param('id'), {
+        var todo = lists[req.param('id')] === undefined ? {} : displayTodosByList(lists[req.param('id')].name);
+        res.render('list', {
             title: 'Todo List',
-            subtitle: 'Start by creating a list',
+            listId: lists[req.param('id')].name,
             list: displayLists(),
-            todo: displayTodosByList(lists[req.param('id')].name)
+            todo: todo
         });
     }, 500);
     console.log('post', req.body);

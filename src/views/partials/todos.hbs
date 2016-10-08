@@ -24,6 +24,7 @@
                     {{#if done }} <i> - done</i></small> {{else }}</b>{{/if}}
                 </span>
                 <form method="post" action="#" class="form-horizontal pull-right">
+                    <input type="hidden" name="parentName" value="{{list}}">
                     {{#if done }}
                         <button class="btn btn-default btn-sm pull-left" type="submit" name="todo" value="{{ body }}">
                             <i class="glyphicon glyphicon-ok"></i>
@@ -33,7 +34,7 @@
                             <i class="glyphicon glyphicon-ok"></i>
                         </button>
                     {{/if}}
-                    <button class="btn btn-danger btn-sm pull-left" type="submit" name="delete" value="{{ body }}">
+                    <button class="btn btn-danger btn-sm pull-left" type="submit" name="deleteItem" value="{{ body }}">
                         <i class="glyphicon glyphicon-remove"></i>
                     </button>
                 </form>
