@@ -1,0 +1,45 @@
+<form method="post" action="#" class="form-horizontal row">
+    <div class="form-group col-md-6">
+        <label for="message" class="control-label">Add an item to the list:</label>
+        <div class="input-group">
+            <input type="hidden" name="listName" value="{{listId}}">
+            <input type="text" class="form-control" name="message">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </span>
+        </div>
+    </div>
+</form>
+
+{{#if todo}}
+
+    <ul class="list-group">
+        {{#each todo }}
+
+            <li class="row list-group-item">
+                <span class="pull-left">
+                    <span>{{ @index }}</span> -
+                    {{#if done }}<small>{{else }}<b>{{/if}}
+                    {{ body }}
+                    {{#if done }} <i> - done</i></small> {{else }}</b>{{/if}}
+                </span>
+                <form method="post" action="#" class="form-horizontal pull-right">
+                    <input type="hidden" name="parentName" value="{{list}}">
+                    {{#if done }}
+                        <button class="btn btn-default btn-sm pull-left" type="submit" name="todo" value="{{ body }}">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </button>
+                    {{else }}
+                        <button class="btn btn-info btn-sm pull-left" type="submit" name="done" value="{{ body }}">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </button>
+                    {{/if}}
+                    <button class="btn btn-danger btn-sm pull-left" type="submit" name="deleteItem" value="{{ body }}">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                </form>
+            </li>
+
+        {{/each}}
+    </ul>
+{{/if}}

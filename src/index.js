@@ -15,43 +15,16 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Database setup
-var nosql = require('nosql').load('nosql/database.nosql');
+var list = require('nosql').load('nosql/list.nosql');
+var nosql = require('nosql').load('nosql/todo.nosql');
 
 var callback = function(err, selected) {
     // console.log('Got', selected);
     
     return selected;
 };
-var mapAll = function(doc) {
-    // Add sort, filter results ...
-    return doc;
-};
 
-const todoList = nosql.all(mapAll, displayCallback);
-var all = function () {
-    var items = [];
-    nosql.each(function success(value) {
-        items.push(value);
-    }), function error(err) {
-        console.error('Error', err);
-    };
-    return items;
-};
-
-
-var map = function(doc) {
-    if (doc)
-        return doc;
-};
-
-var countAll = function() {
-    var i = 0;
-    displayAll().forEach(function (value, key) {
-        i++;
-    });
-    return i;
-};
-var displayAll = function() {
+var displayTodos = function() {
     var items = [];
     nosql.each(function (value, key) {
         if (value.body)
@@ -59,22 +32,87 @@ var displayAll = function() {
     });
     return items;
 };
+var displayTodosByList = function(listName) {
+    var items = [];
+    nosql.each(function (value, key) {
+        if (value.list == listName)
+            items.push(value);
+    });
+    return items;
+};
+var displayLists = function() {
+    var items = [];
+    list.each(function (value, key) {
+        if (value.name)
+            items.push(value);
+    });
+    return items;
+};
+var isListExists = function (name) {
+    var listExist = false;
+    list.each(function (value) {
+        if (value.name === name)
+            listExist = true;
+    });
+    return listExist;
+};
+const lists = displayLists();
 // Routes handler
-var newItem = [];
 app.post('/', function (req, res) {
-    if (req.body.delete) {
-        // Remove item
-        nosql.update(function(doc) {
-            if (doc.body === req.body.delete)
+    var newItem = [];
+    if (req.body.deleteList) {
+        // Remove list
+        list.update(function(doc) {
+            if (doc.name === req.body.deleteList)
                 doc = {};
-                console.log('remove', doc);
-                return doc;
+        
+            console.log('remove', doc);
+            return doc;
         }, callback);
+    }
+    if (req.body.list !== undefined && req.body.list !== '') {
+        if (isListExists(req.body.list) === true)
+            return;
+        // Insert new list
+        newItem.push({
+            name: req.body.list
+        });
+        list.insert(newItem, callback);
+    }
+    // reload page
+    setTimeout(function () {
+        res.render('home', {
+            title: 'Todo List',
+            subtitle: 'Start by creating a list',
+            list: displayLists()
+            // todo: displayTodos()
+        });
+    }, 500);
+    console.log('post', req.body);
+});
+app.post('/list/:id', function (req, res) {
+    var newItem = [];
+    // New todoListItem
+    if (req.body.message !== undefined && req.body.message !== '') {
+        // Insert new item
+        newItem.push({
+            list: req.body.listName,
+            body: req.body.message
+        });
+        nosql.insert(newItem, callback);
+    }
+    // New list
+    if (req.body.list !== undefined && req.body.list !== '') {
+        // Insert new list
+        newItem.push({
+            name: req.body.list
+        });
+        list.insert(newItem, callback);
     }
     if (req.body.done) {  // Done action
         nosql.update(function(doc) {
             if (doc.body === req.body.done)
-                doc = {body: req.body.done, done:1};
+                doc = {list: req.body.parentName, body: req.body.done, done:1};
             console.log('update', doc);
             return doc;
         }, callback);
@@ -82,23 +120,37 @@ app.post('/', function (req, res) {
     if (req.body.todo) { // Remove done flag
         nosql.update(function(doc) {
             if (doc.body === req.body.todo)
-                doc = {body: req.body.todo};
+                doc = {list: req.body.parentName, body: req.body.todo};
             console.log('update', doc);
             return doc;
         }, callback);
     }
-    if (req.body.message !== undefined && req.body.message !== '') {
-        // Insert new item
-        newItem.push({
-            body: req.body.message
-        });
-        nosql.insert(newItem, callback);
+    if (req.body.deleteItem) {
+        // Remove item
+        nosql.update(function(doc) {
+            if (doc.body === req.body.deleteItem)
+                doc = {};
+            console.log('remove', doc);
+            return doc;
+        }, callback);
+    }
+    if (req.body.deleteList) {
+        // Remove item
+        list.update(function(doc) {
+            if (doc.name === req.body.deleteList)
+                doc = {};
+            console.log('remove', doc);
+            return doc;
+        }, callback);
     }
     // reload page
     setTimeout(function () {
-        res.render('home', {
+        var todo = lists[req.param('id')] === undefined ? {} : displayTodosByList(lists[req.param('id')].name);
+        res.render('list', {
             title: 'Todo List',
-            todoList: displayAll()
+            listId: lists[req.param('id')].name,
+            list: displayLists(),
+            todo: todo
         });
     }, 500);
     console.log('post', req.body);
@@ -106,8 +158,19 @@ app.post('/', function (req, res) {
 app.get('/', (request, response) => {
     response.render('home', {
         title: 'Todo List',
-        todoList: displayAll()
+        subtitle: 'Start by creating a list',
+        list: displayLists()
+        // todo: displayTodos()
     });
+});
+app.get('/list/:id', (request, response) => {
+    response.render('list', {
+        title: 'Todo List',
+        listId: lists[request.param('id')].name,
+        list: displayLists(),
+        todo: lists[request.param('id')] === undefined ? {} : displayTodosByList(lists[request.param('id')].name)
+    });
+console.log('route: list ', request.param('id'));
 });
 // Views settings
 app.engine('.hbs', exphbs({
