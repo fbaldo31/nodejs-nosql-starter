@@ -7,4 +7,4 @@
 `npm install`
 
 ###Launch
-`node index.js`
+`npm start`
