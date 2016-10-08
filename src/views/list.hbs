@@ -2,24 +2,12 @@
 
     <div class="col-md-12">
         <article class="col-xs-8">
-            <h2>{{title}}</h2>
+            <h2><a href="/">{{title}}</a></h2>
             <h3>{{listId}}</h3>
             {{>todos }}
         </article>
 
         <aside class="col-xs-3 pull-right">
-            <form method="post" action="#" class="form-horizontal row">
-                <div class="form-group col-md-6">
-                    <label for="message" class="control-label">Create a new list</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="list">
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary">+</button>
-                    </span>
-                    </div>
-                </div>
-            </form>
-
             {{>lists }}
         </aside>
     </div>

@@ -1,22 +1,32 @@
 {{! Lists view }}
+<form method="post" action="#" class="form-horizontal row">
+    <div class="form-group">
+        <label for="message" class="control-label">Create a new list</label>
+        <div class="input-group">
+            <input type="text" class="form-control" name="list">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">+</button>
+                    </span>
+        </div>
+    </div>
+</form>
+
 {{#if list}}
     <div class="panel panel-default row">
         <div class="panel-heading">
             <h3 class="panel-title">Go to</h3>
         </div>
         {{#each list }}
-            <ul class="nav nav-pills">
+            <ul class="nav nav-pills nav-stacked">
                 <li class="list-group-item col-xs-12">
-                        <form method="post" action="#" class="form-horizontal pull-right">
-                            <a href="/list/{{ @index }}" class="col-xs-8">{{ name }}</a>
-                            <button class="btn btn-sm btn-danger" type="submit" name="delete" value="{{ name }}" title="Delete this list">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </button>
-                        </form>
-
+                    <a href="/list/{{ @index }}" class="col-xs-8">{{ name }}</a>
+                    <form method="post" action="#" class="form-horizontal">
+                        <button class="btn btn-danger" type="submit" name="deleteList" value="{{ name }}" title="Delete this list">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </form>
                 </li>
             </ul>
-
 
         {{/each}}
     </div>
