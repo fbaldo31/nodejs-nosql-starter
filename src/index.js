@@ -20,7 +20,6 @@ var nosql = require('nosql').load('nosql/todo.nosql');
 
 var callback = function(err, selected) {
     // console.log('Got', selected);
-    
     return selected;
 };
 
@@ -55,6 +54,14 @@ var isListExists = function (name) {
             listExist = true;
     });
     return listExist;
+};
+var getListNameById = function (id) {
+    var name = '';
+    list.each(function (value, key) {
+        if (key === id)
+            name = value.name;
+    });
+    return name;
 };
 const lists = displayLists();
 // Routes handler
@@ -145,15 +152,16 @@ app.post('/list/:id', function (req, res) {
     }
     // reload page
     setTimeout(function () {
-        var todo = lists[req.param('id')] === undefined ? {} : displayTodosByList(lists[req.param('id')].name);
+        var todo = lists[req.params.id] === undefined ? {} : displayTodosByList(lists[req.params.id].name);
         res.render('list', {
             title: 'Todo List',
-            listId: lists[req.param('id')].name,
+            listId: getListNameById(req.params.id),// lists[req.param('id')].name,
             list: displayLists(),
             todo: todo
         });
     }, 500);
     console.log('post', req.body);
+    console.log('name', getListNameById(req.params.id));
 });
 app.get('/', (request, response) => {
     response.render('home', {
@@ -166,11 +174,11 @@ app.get('/', (request, response) => {
 app.get('/list/:id', (request, response) => {
     response.render('list', {
         title: 'Todo List',
-       // listId: lists[request.param('id')].name,
+        listId: lists[request.params.id].name,
         list: displayLists(),
-        todo: lists[request.param('id')] === undefined ? {} : displayTodosByList(lists[request.param('id')].name)
+        todo: lists[request.params.id] === undefined ? {} : displayTodosByList(lists[request.params.id].name)
     });
-console.log('route: list ', request.param('id'));
+console.log('route: list ', request.params.id);
 });
 // Views settings
 app.engine('.hbs', exphbs({
