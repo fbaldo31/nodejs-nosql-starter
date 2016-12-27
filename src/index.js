@@ -166,7 +166,7 @@ app.get('/', (request, response) => {
 app.get('/list/:id', (request, response) => {
     response.render('list', {
         title: 'Todo List',
-        listId: lists[request.param('id')].name,
+       // listId: lists[request.param('id')].name,
         list: displayLists(),
         todo: lists[request.param('id')] === undefined ? {} : displayTodosByList(lists[request.param('id')].name)
     });
@@ -182,6 +182,6 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-console.log('Browser listening on port 3000....');
+console.log('Browser listening on port 3030....');
 
-app.listen(3000);
+app.listen(3030);
