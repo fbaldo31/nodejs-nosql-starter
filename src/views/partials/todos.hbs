@@ -1,8 +1,8 @@
 <form method="post" action="#" class="form-horizontal row">
+    <input type="hidden" name="listName" value="{{listId}}">
     <div class="form-group col-md-6">
         <label for="message" class="control-label">Add an item to the list:</label>
         <div class="input-group">
-            <input type="hidden" name="listName" value="{{listId}}">
             <input type="text" class="form-control" name="message">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary">Add</button>
