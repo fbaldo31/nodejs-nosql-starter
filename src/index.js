@@ -56,12 +56,7 @@ var isListExists = function (name) {
     return listExist;
 };
 var getListNameById = function (id) {
-    var name = '';
-    list.each(function (value, key) {
-        if (key === id)
-            name = value.name;
-    });
-    return name;
+    return lists[id].name;
 };
 const lists = displayLists();
 // Routes handler
@@ -174,11 +169,11 @@ app.get('/', (request, response) => {
 app.get('/list/:id', (request, response) => {
     response.render('list', {
         title: 'Todo List',
-        listId: lists[request.params.id].name,
+        listId: getListNameById(request.params.id),
         list: displayLists(),
         todo: lists[request.params.id] === undefined ? {} : displayTodosByList(lists[request.params.id].name)
     });
-console.log('route: list ', request.params.id);
+console.log('route: list ', getListNameById(request.params.id));
 });
 // Views settings
 app.engine('.hbs', exphbs({
