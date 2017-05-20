@@ -1,12 +1,12 @@
-##Todo List with nodejs Http and nosql database.
+## Todo List with nodejs Http and nosql database.
 
-###Install project'
+### Install project'
 `cd nodejs-nosql-starter`
 `npm install`
 
-###Prepare database
+### Prepare database
 Create `src/nosql/list.nosql`
 Create `src/nosql/todo.nosql`
 
-###Launch
+### Launch
 `npm start`

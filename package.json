@@ -6,7 +6,7 @@
     "url": "https://github.com/fbaldo31/node-nosql"
   },
   "scripts": {
-    "start": "cd src & node index.js"
+    "start": "cd src && node index.js"
   },
   "author": "Frederick BALDO",
   "license": "MIT",
