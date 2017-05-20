@@ -185,6 +185,6 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-console.log('Browser listening on port 3030....');
+console.log('Browser listening on port 80....');
 
-app.listen(3030);
+app.listen(80);
