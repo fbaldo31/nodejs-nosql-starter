@@ -8,7 +8,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const exphbs = require('express-handlebars');
-const port = process.env.PORT || 80;
+
+const server_port = process.env.OPENSHIFT_NODEJS_PORT || 3030;
+const server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 // App config
 app.use(bodyParser.urlencoded({
@@ -186,6 +188,6 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.listen(port, function() {
+app.listen(server_port, server_ip_address, function() {
     console.log('Browser listening on port' + port);
 });
