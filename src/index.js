@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const exphbs = require('express-handlebars');
 
-const server_port = process.env.OPENSHIFT_NODEJS_PORT || 3030;
+const server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 const server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 // App config
