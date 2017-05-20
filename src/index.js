@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const exphbs = require('express-handlebars');
+const port = process.env.PORT || 3030;
 
 // App config
 app.use(bodyParser.urlencoded({
@@ -185,6 +186,6 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-console.log('Browser listening on port 80....');
-
-app.listen(80);
+app.listen(port, function() {
+    console.log('Browser listening on port' + port);
+});
