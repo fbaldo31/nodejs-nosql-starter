@@ -8,7 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const exphbs = require('express-handlebars');
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 80;
 
 // App config
 app.use(bodyParser.urlencoded({
