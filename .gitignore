@@ -5,8 +5,5 @@ node_modules
 npm-debug.log
 
 # Databases
-src/nosql/*.nosql
-src/nosql/*.changelog
-
-# Others
-npm-debug.log
+# src/nosql/*.nosql
+# src/nosql/*.changelog
