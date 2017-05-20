@@ -189,5 +189,5 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.listen(server_port, server_ip_address, function() {
-    console.log('Browser listening on port' + port);
+    console.log('Browser listening on ' +server_ip_address +': ' + server_port);
 });
